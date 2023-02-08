@@ -182,6 +182,7 @@ def wyniki_general(request, pk):
 			zawody_grup[i] = Zawody.objects.filter(zawody_grupa__nazwa=i).values_list('id', flat=True)
 
 		zawody_grup_nazwy = zawody_grup
+		# print(f'185 grupy zxawodow w tym turnieju: {grupy_zawodow_w_tym_turnieju}')
 
 
 
@@ -284,7 +285,7 @@ def wyniki_general(request, pk):
 		for i in turniej_grup_set:
 			converted_list = [str(element) for element in turniej_grup_set]
 			joined_string_turnieje = ",".join(converted_list)
-		# print(f'joined_string_turnieje: {joined_string_turnieje}')
+		# print(f'287 joined_string_turnieje: {joined_string_turnieje}')
 
 ################################################
 
@@ -327,7 +328,7 @@ def wyniki_general(request, pk):
 					"group by account_account.id "\
 					"order by Wynik desc "\
 
-		print(f'sql string: {sql_string}')
+		# print(f'sql string: {sql_string}')
 
 		wynik_generalny_sql = Account.objects.raw(sql_string)
 		wynik_generalny = {'wynik':wynik_generalny_sql, 'header':display_headings}
