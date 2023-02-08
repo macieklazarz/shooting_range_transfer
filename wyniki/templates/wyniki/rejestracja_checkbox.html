@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load tailwind_filters %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<div class="container pt-6">
+
+
+	<div class="d-flex justify-content-center" >
+		<h3>Zapisy do konkurencji</h3>
+	</div>
+
+	{% if dodawanie_zawodnika %}
+		<div class="row justify-content-center">
+
+				<form method="post" class="mt-0">
+					{% csrf_token %}
+					{% for field in form %}
+						 {% if  zawodnik_rts and field.label == "Zawodnik" %}
+							{{ field }}
+						{% endif %}
+					{% endfor %}
+					<div class="col-auto">
+						<div class="table-responsive">
+							<table class="table table-hover table-responsive mx-auto w-auto align-middle md:text-center table-condensed">
+								
+						        <tr>
+						        	{% for field in form %}
+						        		{% if field.label != "Zawodnik" %}
+							        		<td class="m mpad">{{ field.label }}</td>
+							        		<td class="m mpad">{{ field }}</td>
+							        		{% if forloop.counter|add:"-1"|divisibleby:"3" %}
+							        			</tr>
+							        			<tr>
+							        		{% endif %}
+							        	{% endif %}
+						        	{% endfor %}
+						        </tr>
+						        
+						  
+							</table>
+						</div>
+					</div>
+				
+
+				
+					
+					<button type='submit' class="btn btn-primary btn-block">Dodaj</button>
+				</form>
+
+		</div>
+
+	{% else %}
+		<div class="d-flex justify-content-center">
+			<h1 class="text-4xl text-gray-800">Rejestracja zamknięta</h1>
+		</div>
+	{% endif %}
+
+	<div class="row justify-content-center">
+		{% if lista_zarejestrowanych %}
+			<div class="justify-content-left">
+				<p class="m m-1">Jesteś zarejestrowany do następujących konkurencji:</p> 
+				{% for i in lista_zarejestrowanych %}
+					<p class="m m-1">{{i.zawody}}</p>
+				{% endfor %}
+				<br>
+				<p class="m m-1"><b>Opłata: </b>{{suma_oplat}} zł</p>
+
+			</div>
+		{% endif %}
+	</div>
+
+</div>
+
+
+{% endblock content %}
