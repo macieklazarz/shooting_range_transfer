@@ -1,0 +1,58 @@
+------------- EX1 --------------
+
+[
+{
+"label": "No",
+"score": 5,
+"description": "Negative answer",
+"weight": 0.5
+},
+{
+"label": "Yes",
+"score": 10,
+"description": "Positive answer",
+"weight": 1.0
+}
+]
+
+-------------- EX2 --------------
+
+[
+{
+"label": "Poorly",
+"score": 5, 
+"description": "Poorly", 
+"weight": 0.5
+},
+{
+"label": "Average",
+"score": 10, 
+"description": "Average Speech", 
+"weight": 1.0
+},
+{
+"label": "Great",
+"score": 15, 
+"description": "Positive Great", 
+"weight": 1.5
+}
+]
+
+-------------- EX3 --------------
+
+[
+{
+"label": "No",
+"score": 1,
+"description": "Negative Answer",
+"weight": 1.0
+},
+{
+"label": "Yes",
+"score": 5,
+"description": "Positive Answer",
+"weight": 1.0
+}
+]
+
+---------------------------------

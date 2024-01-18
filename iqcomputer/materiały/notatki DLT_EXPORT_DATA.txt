@@ -1,0 +1,3 @@
+-- triggery wrzucajace dane do dlt_export_data zaczynaja sie na EXP_ i tak np triger do eventow to exp_event_trg
+-- w dlt_export_data_pkg body mam insert into DLT_EXPORT_APP_DATA
+--- trigger odpalajacy sie przed exportem  blediny to DLT_EXPORT_DATA_PKG.PRE_PROCESS_EXPORT_DATA

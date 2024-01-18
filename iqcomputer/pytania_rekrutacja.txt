@@ -1,0 +1,8 @@
+1. Odpalanie skryptu bash w tle - jaka komenda
+2. Zmiana uprawnień do pliku
+3. Jak listujemy wszystkie pliki w katalogu
+4. Zlicz znaki w pliku
+
+
+
+5. truncate a delete

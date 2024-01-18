@@ -1,0 +1,21 @@
+jest wymienione duzo testow ale nie dla wszystkiego trzeba je wszystkie robic- trzeba odpowiednio wybrac
+testy powinny byc robione przez customer site
+w dokumencie test plan mamy test cases, testy sa przeprowadzane przez inne teamy czasami bo my mozemy czegos nie miec np ipada
+testing schedule - jeden  z dokumentow - jest ich wiele
+brd -businnes requirement document
+sporo ludzi zapomina robic negative testing - np wpisywac litery w pole z numerem telefonu na front endzie
+testy trzeba spriorytetyzowaæ - wskazaæ te które s¹ kluczowe
+tester musi byc zapoznany totalnie z dokumentacj¹
+tester musi miec dane z proda zeby zrobic qa - musi miec test data
+performance training -
+integration testing - jesi jest wiele apligacji ktore trzeba zmergowac
+regression testing - jeœli kilka razy pod rzad cos testujemy
+UAT - te testy buduj¹ zaufanie klienta
+production testing - po przeniesieniu na produkcjê, wa¿ne ¿eby mieæ rollback strategy
+defect management - logowaæ defekty wykryte, oceniac critical/minor/major
+kpi key points indicator
+
+pre prokekt rick assesment 
+projekt health check - audytewewnetrzny jak sie ma aplikacja
+w sharepoincie mamy deposiotry nadokumentacje 
+mamy rozne toole do mapa: jira, csm, cs hub, psa

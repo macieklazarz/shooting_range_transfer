@@ -1,0 +1,635 @@
+
+C:\Users\mlazarz\PycharmProjects
+-------------------------------------------
+select * from all_tab_columns where lower(table_name) like '%sample%' ;
+select * from all_tab_columns where lower(COLUMN_name) like '%dsa%' ;
+select * from USER_PROCEDURES;
+select * from user_triggers ;
+SELECT * FROM ALL_SOURCE WHERE UPPER(TEXT) LIKE '%CUSTOMER_OPEN_FIELDS%';
+
+select TRIGGER_NAME, TRIGGER_TYPE, TRIGGERING_EVENT, TABLE_NAME, DESCRIPTION, TRIGGER_BODY from all_triggers where upper(table_name) = 'PRODUCT';
+
+SELECT type, name, line, text
+  FROM dba_source
+ WHERE upper(text) like upper('%MEETING_ATTENDEE%');
+
+--- sledzenie joba ----------------------
+
+select * from scheduler_event where upper(event_name) like '%MI_DLS%';
+
+select * from scheduler_event where upper(DESCRIPTION) like '%MI_SCH%';
+
+select * from dlt_job where dlt_job_id = 7000000000000968;
+
+select * from dlt_project where dlt_project_id = 7000000000000102;
+
+
+7000000000000968
+7000000000000968
+
+
+SELECT * FROM DLT_JOB_RUN;
+SELECT * FROM DLT_JOB;
+SELECT * FROM DLT_PROJECT;
+DLT_LOG_PROCESS_MESSAGE
+
+SELECT * FROM DLT_JOB_RUNSTAT;
+select * from scheduler_error where scheduler_task_id = 500017000003187 order by log_date desc;
+SELECT * FROM SCHEDULER_LOG WHERE SCHEDULER_LOG_ID = 10470939;
+
+select * from dlt_global_variable; -- zmienne w komodo
+
+
+select dp.project_name, dj.job_name, dlpm.message_date, dlpm.message_text
+from DLT_LOG_PROCESS_MESSAGE dlpm
+join dlt_log_process_run dlpr on dlpr.dlt_log_process_run_id = dlpm.dlt_log_process_run_id
+join DLT_JOB_RUN djr on djr.DLT_JOB_RUN_id = dlpr.process_job_id
+join DLT_JOB dj on dj.DLT_JOB_id = djr.dlt_job_id
+join DLT_PROJECT dp on dp.dlt_project_id = dj.dlt_project_id
+where 1=1 
+and lower(dj.job_name) like 'download%'
+--and lower(dp.project_name) like 'download%'
+order by dlpm.message_date desc;
+
+select dp.project_name, dj.job_name, djr.*
+from DLT_JOB_RUN djr
+join DLT_JOB dj on dj.DLT_JOB_id = djr.dlt_job_id
+join DLT_PROJECT dp on dp.dlt_project_id = dj.dlt_project_id
+where 1=1 
+and lower(job_name) like 'Download_Files_MoveIt'
+and lower(dp.project_name) like '26.04.2017 - Biotta CH Scheduler'
+order by djr.start_time desc;
+
+
+select dp.project_name, dj.job_name, djt.display_name
+from dlt_job_task djt
+join dlt_job dj on dj.dlt_job_id = djt.dlt_job_id
+join dlt_project dp on dp.dlt_project_id = dj.dlt_project_id
+where djt.dlt_job_task_id = 7000000000016196;
+##############################
+szukanie po nazwie joba
+
+select dp.project_name, dj.job_name, djt.display_name
+from dlt_job_task djt
+join dlt_job dj on dj.dlt_job_id = djt.dlt_job_id
+join dlt_project dp on dp.dlt_project_id = dj.dlt_project_id
+where  lower(dj.job_name) like '%main%daily%'
+#########################
+szukanie po nazwie pliku wyjsciowego
+#########################
+select dp.project_name, dj.job_name, djt.display_name, djtp.property_value
+from dlt_job_task djt
+join DLT_JOB_TASK_PROPERTY djtp on djtp.dlt_job_task_id = djt.dlt_job_task_id
+join dlt_job dj on dj.dlt_job_id = djt.dlt_job_id
+join dlt_project dp on dp.dlt_project_id = dj.dlt_project_id
+where djtp.property_value like '%Customer_Affiliation1%';
+
+###############################
+SZUKANIE PO NAZWIE TABELI
+###############################
+select dp.project_name, dj.job_name, djt.display_name, djtp.property_value
+from dlt_job_task djt
+join dlt_job dj on dj.dlt_job_id = djt.dlt_job_id
+join dlt_project dp on dp.dlt_project_id = dj.dlt_project_id
+join dlt_job_task_property djtp on djtp.dlt_job_task_id = djt.dlt_job_task_id
+where 1=1 
+and lower(djtp.property_value) like '%order_header%' 
+and djtp.tenant_id = 500081;
+################
+szukanie nested joba
+##################
+select dp.project_name, -- 2. tu jest nazwa projektu w ktorym jest nestowany job
+dj2.job_name, --3. tu jest nazwa joba w ktorym jest nestowany job
+djt.display_name, -- 4. tak wyswietla sie nestowany job
+djtp.* from DLT_JOB_TASK_PROPERTY djtp
+join dlt_job dj on  djtp.property_value like dj.dlt_job_id    
+join dlt_job_task djt on djt.dlt_job_task_id = djtp.dlt_job_task_id
+join dlt_job dj2 on dj2.dlt_job_id = djt.dlt_job_id
+join dlt_project dp on dp.dlt_project_id = dj2.dlt_project_id
+where dj.job_name = 'Declaration_Create'    -- 1. tu wpisz nazwe nestowanego joba
+;
+
+
+select * from DLT_JOB_TASK_FIELD where dlt_job_task_id = 9000000000038239 order by 3;
+;
+select * from DLT_JOB_TASK_PROPERTY where dlt_job_task_id = 9000000000038239;
+
+select * from DLT_JOB_TASK_PROPERTY where property_value like '%ProjectExportSentPath%';
+
+##########################
+szukanie po mappingu
+##########################
+select p.project_name, j.job_name, jt.display_name, tep.*
+from dlt_transform_event_property tep
+join dlt_map_transform_event mte on tep.dlt_map_transform_event_id = mte.dlt_map_transform_event_id
+join dlt_map_transform_process mtp on mte.dlt_map_transform_process_id = mtp.dlt_map_transform_process_id
+join dlt_job_task_connector jtc on mtp.dlt_job_task_connector_id = jtc.dlt_job_task_connector_id
+join dlt_job_task jt on jtc.target_task_id = jt.dlt_job_task_id
+join dlt_job j on jt.dlt_job_id = j.dlt_job_id
+join dlt_project p on j.dlt_project_id = p.dlt_project_id
+where tep.property_value like '%customer%'
+and p.project_name = 'RDH_CONSENT_IMP'
+and p.tenant_id = 000000
+;
+##############################
+szukanie po tym co jest w dashboardzie
+##############################
+select * from DLT_JOB_RUNstat ;
+----------------------------------------------------------
+
+
+link do maszyny dla danej bazy: select distinct machine_name from service_manager order by 1;
+
+
+SZUKANIE TABELI VIRTUALNEJ: SELECT * FROM DN_PROPERTY WHERE UPPER(TABLE_NAME) LIKE 'VT_LOCATION%';
+
+
+KOMODO EMAIL ATTACHMENT FILE PATTERN .*.XLSX   KROPKA OZNACZA DOWOLNY ZNAK, * DOWOLN¥ LICZBÊ POPRZEDZAJ¥CEGO ZNAKU
+
+
+
+
+-------------dynamiki:
+select dt.dn_dynamic_table_id,NVL(dt.table_name,dct.text) as entity_name,dt.dynamic_table,dt.parent_root,dp.column_name,dpd.name,dl.dn_language_id,dl.description as language,
+
+dp.dn_user_type_id,du.description as user_type_name,
+
+dt.dn_version_id,dv.description version_name
+
+from dn_dynamic_table dt
+
+  inner join dn_property dp on (dp.table_name like 'dynamic%' || dt.dn_dynamic_table_id)
+
+  left outer join dn_client_translation dct on (dct.string_id=dt.table_name)
+
+  inner join dn_property_description dpd on (dpd.dn_property_id=dp.dn_property_id)
+
+  inner join dn_language dl on (dl.dn_language_id=dpd.dn_language_id)
+
+  inner join dn_version dv on (dv.dn_version_id=dt.dn_version_id)
+
+  inner join dn_user_type du on (du.dn_user_type_id=dp.dn_user_type_id)
+
+where
+
+  --dt.tenant_id=500017
+
+   dt.dn_dynamic_table_id = 7888500010184499            
+
+order by dt.dn_dynamic_table_id;
+------------------
+problem z FERRING / Ferring: MoveIT(DMZ) ==> sftp.bmi-system.com (FTP) [KO]
+patrz jira FRLD-11307
+
+
+--------------- poszukiwanie dynamica
+SELECT
+  dt.dn_dynamic_table_id,
+  NVL(dct.text,dt.table_name) AS entity_name,
+  dt.dynamic_table,
+  dt.parent_root,
+  dp.column_name,
+  dpd.name,
+  dl.dn_language_id,
+  dl.description AS language,
+  dp.dn_user_type_id,
+  du.description AS user_type_name,
+  dt.dn_version_id,
+  dv.description version_name,
+  dpr.property_role 
+FROM
+  dn_dynamic_table dt
+INNER JOIN dn_property dp
+ON
+  (
+    dp.table_name LIKE 'dynamic%'
+    || dt.dn_dynamic_table_id
+  )
+LEFT OUTER JOIN dn_client_translation dct
+ON
+  (
+    dct.string_id=dt.table_name
+  )
+INNER JOIN dn_property_description dpd
+ON
+  (
+    dpd.dn_property_id=dp.dn_property_id
+  )
+INNER JOIN dn_language dl
+ON
+  (
+    dl.dn_language_id=dpd.dn_language_id
+  )
+INNER JOIN dn_version dv
+ON
+  (
+    dv.dn_version_id=dt.dn_version_id
+  )
+INNER JOIN dn_user_type du
+ON
+  (
+    du.dn_user_type_id=dp.dn_user_type_id
+  )
+  
+  inner join dn_property_role dpr 
+  on dpr.dn_property_role_id =  dp.dn_property_role_id
+  
+WHERE
+  --lower(dpd.name) like '%product%discount%setup%'
+  --or lower(NVL(dct.text,dt.table_name)) like '%discount%setup%'
+  --dt.tenant_id=500017
+  dt.dn_dynamic_table_id = 7888500000003626
+ORDER BY
+  dt.dn_dynamic_table_id;
+  
+------------- poszukiwanie skryptu korzystaj¹cego z dynamica
+  select * from peurecmi.page_configuration
+  where configuration like '%_7888500000390805%';
+ 
+  select * from peurecmi.dn_script
+  where script_text  like '%_7888500000390805%';
+
+----------------------------------- View bussines objct
+[12:06] Galeziewski, Konrad
+   F12 +  DisplayBusinessObject()
+
+
+
+
+
+------ RATINGI
+--Rating Names
+
+select * from (
+
+select ra.dn_rating_attribute_id, pd.name, ra.external_id_1
+
+from dn_rating_attribute ra
+
+join dn_property p
+
+on p.table_name= 'vt_rating'
+
+and p.column_name like'rt%'||ra.dn_rating_attribute_id
+
+join dn_property_description pd
+
+on p.dn_property_id= pd.dn_property_id
+
+join dn_language l
+
+on pd.dn_language_id= l.dn_language_id
+
+join dn_property_role pr
+
+on p.dn_property_role_id= pr.dn_property_role_id
+
+and pr.property_role= 'CUST'
+
+where l.description= 'Mobile Intelligence'
+and ra.tenant_id = 0
+--order by ra.dn_rating_attribute_id
+
+)x where x.name = 'Patient Potential AF'
+
+;
+
+
+
+SELECT pd.rnames AS RATING_NAME,
+
+  dnra.EXTERNAL_ID_1,
+
+  rvalues.vcodes AS RATING_VALUES,
+
+  re.REGION_CODE
+
+FROM DN_RATING_ATTRIBUTE dnra
+
+LEFT JOIN dn_property dnp
+
+ON TO_CHAR(dnra.DN_RATING_ATTRIBUTE_ID) = SUBSTR(dnp.COLUMN_NAME, 4)
+
+LEFT JOIN
+
+  (SELECT dpd.DN_PROPERTY_ID,
+
+    regexp_replace(LISTAGG(dpd.name
+
+    || ' ('
+
+    || dl.description
+
+    || ')', ', ') WITHIN GROUP (
+
+  ORDER BY dpd.DN_PROPERTY_ID),'(^|,)(.+)(,\2)+', '\1\2') AS rnames
+
+  FROM dn_property_description dpd
+
+  INNER JOIN dn_language dl
+
+  ON dl.DN_LANGUAGE_ID = dpd.DN_LANGUAGE_ID
+
+  GROUP BY dpd.DN_PROPERTY_ID
+
+  ) pd ON dnp.DN_PROPERTY_ID = pd.DN_PROPERTY_ID
+
+JOIN dn_all_code control
+
+ON control.code = dnra.control_type
+
+LEFT JOIN
+
+  (SELECT dnra1.DN_RATING_ATTRIBUTE_ID,
+
+    utl_i18n.unescape_reference(RTRIM(XMLAGG(XMLELEMENT(E,ratings.Rating_CODE
+
+    || ' - '
+
+    ||ratings.Rating_Value,', ').EXTRACT('//text()')
+
+  ORDER BY dnra1.DN_RATING_ATTRIBUTE_ID).GetClobVal(),', ')) AS vcodes
+
+  FROM dn_rating_attribute dnra1
+
+  INNER JOIN
+
+    ( SELECT DISTINCT dnra.DN_RATING_ATTRIBUTE_ID,
+
+      v.dn_code_value_id,
+
+      v.code        AS Rating_CODE,
+
+      d.description AS Rating_Value
+
+    FROM dn_rating_attribute dnra
+
+    INNER JOIN dn_property dnp
+
+    ON (SUBSTR(dnp.column_name,4)   = SUBSTR(dnra.dn_rating_attribute_id,1)
+
+    AND SUBSTR(dnp.column_name,1,3) = 'rt_'
+
+    AND dnp.tenant_id               = dnra.tenant_id)
+
+    INNER JOIN dn_code_table t
+
+    ON (t.code_role = dnp.column_name
+
+    AND t.tenant_id = dnra.tenant_id)
+
+    INNER JOIN dn_code_value v
+
+    ON (v.dn_code_table_id = t.dn_code_table_id
+
+    AND v.tenant_id        = dnra.tenant_id)
+
+    INNER JOIN dn_code_description d
+
+    ON (d.dn_code_value_id                    = v.dn_code_value_id
+
+    AND d.tenant_id                           = dnra.tenant_id)
+
+    WHERE dnp.table_name                      = 'vt_rating'
+
+    AND dnra.tenant_id                        = 500000
+
+    ) ratings ON dnra1.DN_RATING_ATTRIBUTE_ID = ratings.DN_RATING_ATTRIBUTE_ID
+
+  GROUP BY dnra1.DN_RATING_ATTRIBUTE_ID
+
+  ) rvalues ON dnra.dn_rating_attribute_id = rvalues.DN_RATING_ATTRIBUTE_ID
+
+INNER JOIN region re
+
+ON re.REGION_ID         = dnra.REGION_ID
+
+WHERE dnra.STATUS       = 'ACTV'
+
+AND dnp.table_name      = 'vt_rating'
+
+AND dn_property_role_id = 9999000000002435
+
+AND control.table_name  = 'dn_rating_attribute'
+
+AND control.column_name = 'control_type'
+
+AND control.language    = 'System'
+;
+
+------------------ ustawianie use property store w database writerze KOMODO
+configuration name = MI
+select * from dn_property where table_name = 'dynamic__4888500000002093' and tenant_id = 500220;
+select * from dn_user_type where dn_user_type_id = 7888500000000888;
+select * from dn_property_role where dn_property_role_id = 9888105300000475;
+select * from dn_version where dn_version_id = 7888500000006352;
+select * from dn_property_description where dn_property_id = 7888500000011811;
+select * from dn_language where dn_language_id = 7888500000001904;
+
+
+
+------------------------ szukanie pola z tabeli customer_dynamic, contract_dynamic itdw komodo
+SELECT * FROM DN_PROPERTY WHERE TABLE_NAME = 'dynamic__7888500000026249';
+-----------------------------------------
+podbijanie sekwencji
+CREATE TABLE DLT_SEQUENCE_BCKP_20170726 AS (select * from dlt_sequence);
+
+ 
+
+ 
+
+update dlt_sequence set curr_val = (select max(DLT_JOB_TASK_id) from DLT_JOB_TASK where DLT_JOB_TASK_id <9100000000000000) where sequence_name = 'seq_dlt_job_task_exim';
+
+update dlt_sequence set curr_val = (select max(DLT_JOB_TASK_CONN_CONDITION_id) from DLT_JOB_TASK_CONN_CONDITION where DLT_JOB_TASK_CONN_CONDITION_id <9100000000000000) where sequence_name = 'seq_dlt_job_tsk_conn_cond_exim';
+
+update dlt_sequence set curr_val = (select max(DLT_TRANSFORM_EVENT_PROP_ID) from DLT_TRANSFORM_EVENT_PROPERTY where DLT_TRANSFORM_EVENT_PROP_ID <9100000000000000) where sequence_name = 'seq_dlt_trans_event_prop_exim';
+
+update dlt_sequence set curr_val = (select max(DLT_PROJECT_id) from DLT_PROJECT where DLT_PROJECT_id <9100000000000000) where sequence_name = 'seq_dlt_project_exim';
+
+update dlt_sequence set curr_val = (select max(DLT_GLOBAL_VARIABLE_id) from DLT_GLOBAL_VARIABLE where DLT_GLOBAL_VARIABLE_id <9100000000000000) where sequence_name = 'seq_dlt_global_variable_exim';
+
+update dlt_sequence set curr_val = (select max(DLT_JOB_id) from DLT_JOB where DLT_JOB_id <9100000000000000) where sequence_name = 'seq_dlt_job_exim';
+
+update dlt_sequence set curr_val = (select max(DLT_JOB_TASK_FIELD_id) from DLT_JOB_TASK_FIELD where DLT_JOB_TASK_FIELD_id <9100000000000000) where sequence_name = 'seq_dlt_job_task_field_exim';
+
+update dlt_sequence set curr_val = (select max(DLT_MAP_TRANSFORM_PROCESS_id) from DLT_MAP_TRANSFORM_PROCESS where DLT_MAP_TRANSFORM_PROCESS_id <9100000000000000) where sequence_name = 'seq_dlt_map_trans_process_exim';
+
+update dlt_sequence set curr_val = (select max(DLT_MAP_TRANSFORM_PROCFLD_ID) from DLT_MAP_TRANSFORM_PROCESS_FLD where DLT_MAP_TRANSFORM_PROCFLD_ID <9100000000000000) where sequence_name = 'seq_dlt_map_trns_proc_fld_exim';
+
+update dlt_sequence set curr_val = (select max(DLT_JOB_TASK_PROPERTY_id) from DLT_JOB_TASK_PROPERTY where DLT_JOB_TASK_PROPERTY_id <9100000000000000) where sequence_name = 'seq_dlt_job_task_prop_exim';
+
+update dlt_sequence set curr_val = (select max(DLT_JOB_TASK_CONNECTOR_id) from DLT_JOB_TASK_CONNECTOR where DLT_JOB_TASK_CONNECTOR_id <9100000000000000) where sequence_name = 'seq_dlt_job_task_conn_exim';
+
+update dlt_sequence set curr_val = (select max(DLT_MAP_TRANSFORM_EVENT_id) from DLT_MAP_TRANSFORM_EVENT where DLT_MAP_TRANSFORM_EVENT_id <9100000000000000) where sequence_name = 'seq_dlt_map_trans_event_exim';
+
+update dlt_sequence set curr_val = (select max(DLT_MAP_FIELD_id) from DLT_MAP_FIELD where DLT_MAP_FIELD_id <9100000000000000) where sequence_name = 'seq_dlt_map_field_exim';
+
+
+
+-------- role w komodo
+
+ select * from DLT_USER where login = 'etl_bayertr';
+ 
+ select * from DLT_USER_ROLE_SETTING;
+
+-----------------------------
+
+NotNull:$vt_rating/rt_7888500000314775/ratg, AND ct.value_min in ( SELECT external_id_1 from alignment where external_id_1 =$vt_rating/rt_7888500000314775/ratg)
+
+
+jesli nie jest nullem to dodaj to and czyli to co po przecinku siê wykonuje
+
+
+---------------
+
+OD SEBASTIANA ZELAZNEGO
+<!--DebugLog filtering="off">
+            <debug format="%MESSAGE%
+%PARAMETERS%"/>
+            <file filename="d:\temp\NXDNWW-495_001.log" />
+        </DebugLog-->
+
+
+D:\ProgramData\Nexxus\MobileIntelligence\MI\Current\Websites\MobileIntelligence
+
+plik Web.config
+-------------
+poszukiwanie joba/taska który siê wywali³
+
+
+
+SELECT * FROM DLT_JOB_RUNSTAT where failure_count >0 order by start_time desc; 
+select * from dlt_job_task where dlt_job_task_id = 7000000000006735;
+
+select * from dlt_job where dlt_job_id = 7000000000001390;
+-------------------------------------
+mapping coalesce w KOMODO
+select coalesce(?,(select text_3 from customer_dynamic where customer_id = ? and table_id = 7888500000174086)) from dual
+-----------------------------
+wyjmowanie roku w oracle
+
+select extract(year from sysdate) - 1 from dual;
+
+-------------------------------
+
+szukanie po db readerze/writerze KOMODO w bazie
+
+
+select * from dlt_job_task_property where lower(property_value) like 'DbConnectionId:%select %';
+
+select dp.project_name, dj.job_name, djt.display_name
+from dlt_job_task djt
+join dlt_job dj on dj.dlt_job_id = djt.dlt_job_id
+join dlt_project dp on dp.dlt_project_id = dj.dlt_project_id
+where djt.dlt_job_task_id = 7000000000016196;
+
+[16:25] Wala, Jozef
+    select p.project_name, j.job_name, jt.display_name
+from dlt_job_task_property jtp
+join dlt_job_task jt on jtp.dlt_job_task_id = jt.dlt_job_task_id
+join dlt_job j on jt.dlt_job_id = j.dlt_job_id
+join dlt_project p on j.dlt_project_id = p.dlt_project_id
+where p.project_name = 'EXPORT_OADE_CUS'
+and jtp.property_value like '%1888002682943047%'
+;
+ 
+
+
+select * from dlt_job_task where dlt_job_task_id = 9777611100113190;
+
+select * from dlt_job where dlt_job_id = 9777611100101234;
+
+select * from dlt_project where dlt_project_id = 1;
+
+LOOKUPY
+[16:29] Wala, Jozef
+    select tep.property_value, mtp.display_name , t.function_name
+from dlt_project p
+join dlt_job j on p.dlt_project_id = j.dlt_project_id
+join dlt_job_task sjt on j.dlt_job_id = sjt.dlt_job_id
+join dlt_job_task_connector jtc on sjt.dlt_job_task_id = jtc.source_task_id
+join DLT_MAP_TRANSFORM_PROCESS mtp on jtc.dlt_job_task_connector_id = mtp.dlt_job_task_connector_id
+join DLT_MAP_TRANSFORM_EVENT mte on mtp.DLT_MAP_TRANSFORM_PROCESS_id = mte.DLT_MAP_TRANSFORM_PROCESS_id
+join DLT_TRANSFORM t on mte.DLT_TRANSFORM_id = t.DLT_TRANSFORM_id
+left join dlt_transform_event_property tep on mte.DLT_MAP_TRANSFORM_EVENT_id = tep.DLT_MAP_TRANSFORM_EVENT_id and tep.dlt_transform_property_id = 63
+where 1=1
+--and tep.dlt_transform_property_id = 63
+and p.project_name = 'under_dev_and_testing_RDH_CONSENT_IMP'
+and j.job_name = 'Load_Consent'
+and sjt.display_name like 'Load_Consent_%'
+order by mte.DLT_MAP_TRANSFORM_EVENT_id
+;
+ 
+  select mtp.display_name, t.function_name, tep.*
+from dlt_project p
+join dlt_job j on p.dlt_project_id = j.dlt_project_id
+join dlt_job_task sjt on j.dlt_job_id = sjt.dlt_job_id
+join dlt_job_task_connector jtc on sjt.dlt_job_task_id = jtc.source_task_id
+join DLT_MAP_TRANSFORM_PROCESS mtp on jtc.dlt_job_task_connector_id = mtp.dlt_job_task_connector_id
+join DLT_MAP_TRANSFORM_EVENT mte on mtp.DLT_MAP_TRANSFORM_PROCESS_id = mte.DLT_MAP_TRANSFORM_PROCESS_id
+join DLT_TRANSFORM t on mte.DLT_TRANSFORM_id = t.DLT_TRANSFORM_id
+left join dlt_transform_event_property tep on mte.DLT_MAP_TRANSFORM_EVENT_id = tep.DLT_MAP_TRANSFORM_EVENT_id and tep.dlt_transform_property_id = 63
+where 1=1
+--and tep.dlt_transform_property_id = 63
+and p.project_name = 'Interfacce Inviti Congressi Nutricia'
+and j.job_name = 'Preventivo - Scarica XML'
+--and sjt.display_name like 'Load_Consent_%'
+order by mte.DLT_MAP_TRANSFORM_EVENT_id
+;
+-------------------------------
+case w where
+SELECT  E.EXTERNAL_ID_1 AS "Matricule_MI",
+  T.EXTERNAL_ID_1 AS "Code_Reseau",
+  A.EXTERNAL_ID_1 AS "Secteur",
+  y.DESCRIPTION AS "Fonction",
+  E.FIRST_NAME AS "Nom",
+  E.LAST_NAME AS "Prénom",
+  AH.START_DATE AS "Start_date",
+  AH.END_DATE AS "End_date"
+FROM EMPLOYEE E
+
+left JOIN ALIGNMENT_HISTORY AH ON e.employee_id = ah.employee_id
+        AND ah.ALIGNMENT_HISTORY_ID in        (select case when
+(SELECT AH2.ALIGNMENT_HISTORY_ID FROM ALIGNMENT_HISTORY AH2 WHERE ah2.employee_id = e.employee_id and ah2.end_date is null) is not null 
+then (SELECT AH2.ALIGNMENT_HISTORY_ID FROM ALIGNMENT_HISTORY AH2 WHERE ah2.employee_id = e.employee_id and ah2.end_date is null)
+else (select ah3.alignment_history_id from alignment_history ah3 where ah3.employee_id = e.employee_id and ah3.end_date = (SELECT max(ah2.end_date)  FROM ALIGNMENT_HISTORY AH2 WHERE ah2.employee_id = e.employee_id group by ah2.employee_id))
+end as wyn from dual)
+
+
+  JOIN ALIGNMENT A ON A.alignment_ID = Ah.alignment_ID  
+  JOIN TEAM T ON T.TEAM_ID = A.TEAM_ID
+
+
+---------------------------
+pluginy
+
+[15:21] Stanski, Radoslaw
+    C:\ECC_SOURCES_MI\MI11SU06\Bld04\WebForce\CoachingComponents\PlugIns
+?[15:22] Stanski, Radoslaw
+    C:\ECC_SOURCES_MI\MI11SU06\Bld04\WebForce\CustomerComponents\Event\Plugins
+
+--------------------------------
+
+szukanie skryptu:
+select
+de.ENTITY_NAME,
+dets.TABLE_NAME,
+dets. script_id,
+ds.script_version,
+ds.script_text,
+ds.description script_description,
+ds.script_type,
+ds.script_platform,
+ds.status,
+dut.DESCRIPTION user_type_description,
+dv.DESCRIPTION version_description
+from dn_script ds
+join DN_ENTITY_TABLE_SCRIPT dets on ds.script_id=dets.script_id
+join dn_entity de on dets.dn_entity_id=de.dn_entity_id
+join dn_user_type dut on dut.DN_USER_TYPE_ID=ds.DN_USER_TYPE_ID
+join dn_version dv on dv.dn_version_id=ds.dn_version_id
+where 1=1
+and lower(ds.script_text) like '%meeting_attend%'
+and lower(ds.script_text) like '%status%'
+--and lower(ds.script_text) like '%attd%'
+and ds.status='ACTV';

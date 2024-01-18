@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<INSTALL TITLE="ecc_kpi_calc_int_update">
+	<GLOBAL>
+
+		<CD DIRECTORY=".\sql">
+			<EXECUTE>ecc_kpi_calc_int_update.sql</EXECUTE>
+			
+		</CD>
+
+	</GLOBAL>
+
+</INSTALL>
