@@ -1,0 +1,8 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+  <h1>Home</h1>
+  {% for user in users %}
+    <p>{{ user.email }}</p>
+  {% endfor %}
+{% endblock %}
