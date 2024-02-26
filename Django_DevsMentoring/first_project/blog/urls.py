@@ -17,10 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import views
+from .views import ArticleListView, ArticleDetailView, ArticleCreateView, ArticleUpdateView, ArticleDeleteView
 
 app_name = 'blog'
 
 urlpatterns = [
-    path("", views.home, name='blog_home'),
+    path("", ArticleListView.as_view(), name='blog_home'),
     path("about/", views.about, name='blog_about'),
+    path("article/<int:pk>", ArticleDetailView.as_view(), name='article-detail'),
+    path("article/new/", ArticleCreateView.as_view(), name='article-create'),
+    path("article/update/<int:pk>", ArticleUpdateView.as_view(), name='article-update'),
+    path("article/delete/<int:pk>", ArticleDeleteView.as_view(), name='article-delete'),
 ]
