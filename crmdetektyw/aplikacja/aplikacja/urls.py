@@ -20,7 +20,7 @@ from .views import home, Homepage
 from uzytkownicy.forms import UserLoginForm
 from uzytkownicy.views import Register, SignUpView
 from django.contrib.auth import views
-from uzytkownicy.views import logout_view, CustomerListView, StaffListView,CustomerDetailView, CustomerUpdateView
+from uzytkownicy.views import logout_view, CustomerListView, StaffListView,CustomerDetailView, CustomerUpdateView, StaffUpdateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,4 +33,5 @@ urlpatterns = [
     path('customer_detail/<uuid:pk>/', CustomerDetailView.as_view(), name="customer_detail"),
     path('customer_update/<uuid:pk>/', CustomerUpdateView.as_view(), name="customer_update"),
     path('staff_list/', StaffListView.as_view(), name="staff_list"),
+    path('staff_update/<uuid:pk>/', StaffUpdateView.as_view(), name="staff_update"),
 ]

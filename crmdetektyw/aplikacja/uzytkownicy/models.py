@@ -31,4 +31,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 		return self.email
 
 	def get_absolute_url(self):
-		return reverse('customer_update', kwargs={'pk': self.pk})
+		if self.detektyw:
+			url = 'staff_update'
+		else:
+			url = 'customer_update'
+		return reverse(url, kwargs={'pk': self.pk})
+
+class Pojazd(models.Model):
+	numer_rejestracyjny = models.CharField(max_length=12)
+	wlasciciel = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.numer_rejestracyjny
