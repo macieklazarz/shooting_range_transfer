@@ -34,4 +34,5 @@ urlpatterns = [
     path('customer_update/<uuid:pk>/', CustomerUpdateView.as_view(), name="customer_update"),
     path('staff_list/', StaffListView.as_view(), name="staff_list"),
     path('staff_update/<uuid:pk>/', StaffUpdateView.as_view(), name="staff_update"),
+    path('case_list/', include('sprawy.urls', namespace='sprawy')),
 ]
